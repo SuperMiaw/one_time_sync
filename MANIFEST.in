@@ -1,0 +1,4 @@
+include one_time_sync/res/conf.spec
+include one_time_sync/conf/*.ini
+include one_time_sync/script/*.sh
+include one_time_sync/*.txt

@@ -1,0 +1,21 @@
+# This file is provided as simple to setup synchronisations process
+# Theses lines has to be specified by the sync user using `crontab -e`
+
+# It run the program inbackground each 30 minute between 11 PM and 4:30 AM
+# It get killed at 5:15 AM to stop any process that could annoy any people awake
+
+#
+# Environnements variables
+
+SHELL=/bin/sh
+LANG=fr_FR.UTF-8
+PATH=/usr/bin:/bin:/sbin:/usr/local/bin
+
+PYTHON27=/usr/local/bin/python2.7
+PATH_SCRIPT=/usr/home/myuser/scripts/
+
+#
+# m h dom mon command
+*/30    23  *   *   *   $SHELL $PATH_SCRIPT/night_sync/script/run_cron.sh
+*/30    0-4 *   *   *   $SHELL $PATH_SCRIPT/night_sync/script/run_cron.sh
+15      5   *   *   *   $SHELL $PATH_SCRIPT/night_sync/script/kill_by_file.sh

@@ -1,0 +1,10 @@
+# compiled python
+*.pyc
+
+# user data
+*.sqlite
+
+# setuputils
+dist/
+build/
+*.egg-info/
