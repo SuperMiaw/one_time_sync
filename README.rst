@@ -3,7 +3,7 @@ One Time Sync
 
 Requirement
 -----------
-1. `python-2.7` for making this program works.
+1. `python3` for making this program works.
 2. `open-ssh` set up on client and on remote server to set-up secure channels.
 3. `keychain` set up in background (or any other ssh-agent ?) to manage identification and authentication by rsa keys.
 4. `rsync` on client and on server to handle transfert file between server and client.
@@ -20,6 +20,7 @@ downloaded again even if you want to move them off the target directory.
 How it works
 ------------
 The tasks done of these program are quite simple :
+
 1. List 'files'/'folders' from a remote directory.
 2. Loop over list...
     2.1. Check if item has already been retreived fully previously...
@@ -35,7 +36,7 @@ Samples are included along to show you how to make things
 
 Install
 -------
-python2.7 setup.py install (or develop)
+python3 setup.py install (or develop)
 
 
 FreeBSD users
