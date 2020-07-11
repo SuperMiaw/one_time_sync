@@ -1,5 +1,4 @@
 import subprocess
-import re
 
 import paramiko
 
@@ -31,11 +30,11 @@ class RemoteHost:
 
         ssh.connect(self._source_hostname, username=self._source_username)
 
-        cmd_ls = u"ls {path}".format(path=self._source_dir)
+        cmd_ls = "ls {path}".format(path=self._source_dir)
         stdin, stdout, stderr = ssh.exec_command(cmd_ls)
 
         if self._is_verbose:
-            print 'exec (over ssh) : %s' % cmd_ls
+            print('exec (over ssh) : %s' % cmd_ls)
 
         remote_file_names = [filename.strip("\n") for filename in stdout.readlines()]
         ssh.close()
@@ -67,7 +66,7 @@ class RemoteHost:
 
         # TODO Escape properly specials chars like double quote (doesn't seems to work with source_dir and target_dir)
         # source directory ARG
-        cmd.append(u"{user}@{host}:'{directory}/{filename}'".format(
+        cmd.append("{user}@{host}:'{directory}/{filename}'".format(
                 user=self._source_username,
                 host=self._source_hostname,
                 directory=self._source_dir,
@@ -75,12 +74,12 @@ class RemoteHost:
         ))
 
         # destination directory ARG
-        cmd.append(u"{path}/".format(
+        cmd.append("{path}/".format(
                 path=self._target_dir
         ))
 
         if self._is_verbose:
-            print "exec : %s" % " ".join(cmd)
+            print("exec : %s" % " ".join(cmd))
 
         self._process = subprocess.Popen(cmd, shell=False)
 

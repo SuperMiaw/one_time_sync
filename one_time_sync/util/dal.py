@@ -63,7 +63,7 @@ class Context:
         :param version:
         """
         if version == Revision.none:
-            print "upgrade: %s to %s" % (version, Revision.v0)
+            print("upgrade: %s to %s" % (version, Revision.v0))
 
             self.conn.execute("CREATE TABLE syncedRemoteHostFiles"
                               "("
@@ -74,7 +74,7 @@ class Context:
             version = Revision.v0
 
         if version == Revision.v0:
-            print "upgrade: %s to %s" % (version, Revision.v1)
+            print("upgrade: %s to %s" % (version, Revision.v1))
 
             self.conn.execute("ALTER TABLE syncedRemoteHostFiles RENAME TO synced_remote_file")
             self.conn.execute("CREATE TABLE history"

@@ -6,6 +6,6 @@ eval `keychain --noask --quiet --eval id_dsa`
 
 # Set-up python environnement
 export PYTHONIOENCODING=UTF-8
-PYTHON27=/usr/local/bin/python2.7
+PYTHON3=/usr/local/bin/python3
 
-${PYTHON27} -m one_time_sync --config YOUR_ABSOLUTE_PATH_TO_CONFIG
+${PYTHON3} -m one_time_sync --config YOUR_ABSOLUTE_PATH_TO_CONFIG

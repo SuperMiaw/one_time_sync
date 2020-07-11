@@ -4,8 +4,8 @@ import signal
 import sys
 import traceback
 
-from util import dal, proxy
-from util.app import Config
+from one_time_sync.util import dal, proxy
+from one_time_sync.util.app import Config
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
     # LOCALE
     #
     if sys.stdout.encoding is None:
-        print >> sys.stderr, "Encoding for output seems missing... "
+        print("Encoding for output seems missing... ", file=sys.stderr)
         "You should set env variable PYTHONIOENCODING=UTF-8. "
         "Example: running 'export PYTHONIOENCODING=UTF-8' before calling this program"
         exit(1)
@@ -38,27 +38,28 @@ def main():
 
     if os.path.isfile(cfg.lock_file):
         if cfg.verbose:
-            print "Lock file found (%s), canceling synchronisation..." % cfg.lock_file
+            print("Lock file found (%s), canceling synchronisation..." % cfg.lock_file)
         sys.exit()
     else:
         if cfg.verbose:
-            print "Starting synchronisation..."
-            print "Creating lock file (%s)" % cfg.lock_file
-        file(cfg.lock_file, 'w').write(pid)
+            print("Starting synchronisation...")
+            print("Creating lock file (%s)" % cfg.lock_file)
+        with open(cfg.lock_file, 'w') as f:
+            f.write(pid)
 
     # EXIT HANDLER
     #
     remote = None
 
     def handler(signum=None, frame=None):
-        print "Exiting..."
-        print remote
+        print("Exiting...")
+        print(remote)
 
         if remote.process is not None:
             try:
                 remote.process.terminate()
             except:
-                print "Rsync subprocess interrupted"
+                print("Rsync subprocess interrupted")
 
         os.unlink(cfg.lock_file)
         exit(0)
@@ -76,31 +77,31 @@ def main():
         for filename in remote.get_filenames():
 
             if not file_history.is_synced(filename):
-                print "Trying to fetch : %s" % filename
+                print("Trying to fetch : %s" % filename)
 
                 sync_succeed = remote.retrieve_file(filename)
 
                 if sync_succeed:
                     file_history.set_synced(filename)
-                    print "SUCCESS !"
+                    print("SUCCESS !")
                 else:
-                    print "!! ERROR !! Cannot fetch '" + filename + "' (Skipped)"
+                    print("!! ERROR !! Cannot fetch '" + filename + "' (Skipped)")
             elif cfg.verbose:
-                print "File flagged as synchronised"
-                print "skipping : %s" % filename
+                print("File flagged as synchronised")
+                print("skipping : %s" % filename)
 
         if cfg.verbose:
-            print "Synchronisation ended"
-            print "Cleaning database"
+            print("Synchronisation ended")
+            print("Cleaning database")
 
         file_history.cleanup()
     except:
-        print "Fatal error"
+        print("Fatal error")
         traceback.print_exc()
 
     if os.path.isfile(cfg.lock_file):
         if cfg.verbose:
-            print "Removing lock file (%s)" % cfg.lock_file
+            print("Removing lock file (%s)" % cfg.lock_file)
 
         os.unlink(cfg.lock_file)
 

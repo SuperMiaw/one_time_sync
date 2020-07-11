@@ -63,8 +63,8 @@ class Config:
         cfg = ConfigObj(path, configspec=spec, encoding='utf8')
 
         if not cfg.validate(validator):
-            print "Invalid configuration file !"
-            print cfg.validate(validator, preserve_errors=True)
+            print("Invalid configuration file !")
+            print(cfg.validate(validator, preserve_errors=True))
 
             exit(2)
 
