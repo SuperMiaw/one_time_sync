@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="one_time_sync",
 
-    version="2.1.0",
+    version="2.1.1",
 
     description="Retrieve only one time remote files and folders from a remote host.",
 

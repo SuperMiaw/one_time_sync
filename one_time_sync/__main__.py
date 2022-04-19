@@ -77,11 +77,11 @@ def main():
 
         for filename in remote.get_filenames():
             if not file_history.is_synced(filename):
-                print("Trying to fetch : %s" % filename)
-                sync_succeed = remote.retrieve_file(filename)
                 limit_applied = deluge.set_max_upload_speed(cfg.deluge_max_upload_speed)
                 if limit_applied and cfg.verbose:
-                    print("Limit deluge max upload speed.")
+                    print("Deluge: Apply max upload speed.")
+                print("Trying to fetch : %s" % filename)
+                sync_succeed = remote.retrieve_file(filename)
                 if sync_succeed:
                     file_history.set_synced(filename)
                     print("SUCCESS !")
@@ -91,9 +91,6 @@ def main():
                 print("File flagged as synchronised")
                 print("skipping : %s" % filename)
 
-        limit_applied = deluge.unset_max_upload_speed()
-        if limit_applied and cfg.verbose:
-            print("Unset deluge max upload speed.")
         if cfg.verbose:
             print("Synchronisation ended")
             print("Cleaning database")
@@ -102,6 +99,11 @@ def main():
     except:
         print("Fatal error")
         traceback.print_exc()
+    finally:
+        if deluge is not None:
+            limit_applied = deluge.unset_max_upload_speed()
+            if limit_applied and cfg.verbose:
+                print("Deluge: unset max upload speed.")
 
     if os.path.isfile(cfg.lock_file):
         if cfg.verbose:
