@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name="one_time_sync",
 
-    version="2.0.0",
+    version="2.1.0",
 
     description="Retrieve only one time remote files and folders from a remote host.",
 
@@ -17,7 +17,8 @@ setup(
 
     install_requires=[
         'paramiko',
-        'configobj'
+        'configobj',
+        'deluge-client'
     ],
 
     packages=find_packages(),

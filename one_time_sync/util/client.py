@@ -1,12 +1,15 @@
 import subprocess
 
 import paramiko
+from deluge_client import DelugeRPCClient
+
+from one_time_sync.util.app import Config
 
 
 # FIXME Encoding problem happening when trying to call '_escape_quote' ('_source_dir' and '_target_dir')
-class RemoteHost:
-    """Run commands on remote host"""
-    def __init__(self, config):
+class RemoteFileSystem:
+    """Operate on file from remote files."""
+    def __init__(self, config: Config):
         """Run commands on remote host over SSH
         :type config: `~app.Configuration`
         """
@@ -53,7 +56,10 @@ class RemoteHost:
 
         # REMOTE SHELL - CONFIG
         cmd.append('-e')
-        cmd.append('/usr/bin/ssh -q')
+        if self._is_verbose:
+            cmd.append('/usr/bin/ssh')
+        else:
+            cmd.append('/usr/bin/ssh -q')
 
         if self._is_verbose:
             cmd.append("--verbose")
@@ -97,6 +103,45 @@ class RemoteHost:
         :return:
         """
         return name.replace("'", "'\\''")
+
+
+class Deluge:
+    """Remote operation for deluge over RPC."""
+
+    def __init__(self, config: Config):
+        """Remote operation for deluge over RPC
+        :param config: Application configuration
+        """
+        self._hostname = config.deluge_host
+        self._port = config.deluge_port
+        self._username = config.deluge_username
+        self._password = config.deluge_password
+        self._enabled = config.deluge_enabled
+        self._max_upload_speed = -1
+
+    def set_max_upload_speed(self, value: float):
+        """Limit upload speed on deluge.
+
+        :param value: value in kB/s
+        """
+        if not self._enabled:
+            return False  # Disabled.
+        if self._max_upload_speed == value:
+            return False  # Same value as memorized
+
+        client = DelugeRPCClient(self._hostname, self._port, self._username, self._password)
+        try:
+            client.connect()
+            client.core.set_config({b'max_upload_speed': value})
+            self._max_upload_speed = value
+        finally:
+            if client.connected:
+                client.disconnect()
+        return True
+
+    def unset_max_upload_speed(self):
+        """(Commodity) Unset upload speed limit."""
+        return self.set_max_upload_speed(-1)
 
 
 # Bootstrapping

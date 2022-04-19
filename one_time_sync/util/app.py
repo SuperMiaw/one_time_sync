@@ -32,6 +32,30 @@ class Config:
         return self._cfg['source']['directory']
 
     @property
+    def deluge_enabled(self):
+        return self._cfg['deluge']['enabled']
+
+    @property
+    def deluge_host(self):
+        return self._cfg['deluge']['host']
+
+    @property
+    def deluge_port(self):
+        return self._cfg['deluge']['port']
+
+    @property
+    def deluge_username(self):
+        return self._cfg['deluge']['username']
+
+    @property
+    def deluge_password(self):
+        return self._cfg['deluge']['password']
+
+    @property
+    def deluge_max_upload_speed(self):
+        return self._cfg['deluge']['max_upload_speed']
+
+    @property
     def tgt_dir(self):
         """Where downloaded file should be put"""
         return self._cfg['target']['directory']

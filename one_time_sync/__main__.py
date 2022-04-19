@@ -4,7 +4,7 @@ import signal
 import sys
 import traceback
 
-from one_time_sync.util import dal, proxy
+from one_time_sync.util import db, client
 from one_time_sync.util.app import Config
 
 
@@ -70,17 +70,18 @@ def main():
     # MAIN LOOP
     #
     try:
-        remote = proxy.RemoteHost(cfg)
-        context = dal.Context(cfg)
-        file_history = dal.FileHistoryAccess(context)
+        remote = client.RemoteFileSystem(cfg)
+        deluge = client.Deluge(cfg)
+        context = db.Context(cfg)
+        file_history = db.FileHistoryAccess(context)
 
         for filename in remote.get_filenames():
-
             if not file_history.is_synced(filename):
                 print("Trying to fetch : %s" % filename)
-
                 sync_succeed = remote.retrieve_file(filename)
-
+                limit_applied = deluge.set_max_upload_speed(cfg.deluge_max_upload_speed)
+                if limit_applied and cfg.verbose:
+                    print("Limit deluge max upload speed.")
                 if sync_succeed:
                     file_history.set_synced(filename)
                     print("SUCCESS !")
@@ -90,6 +91,9 @@ def main():
                 print("File flagged as synchronised")
                 print("skipping : %s" % filename)
 
+        limit_applied = deluge.unset_max_upload_speed()
+        if limit_applied and cfg.verbose:
+            print("Unset deluge max upload speed.")
         if cfg.verbose:
             print("Synchronisation ended")
             print("Cleaning database")
