@@ -13,7 +13,7 @@ Requirement
 Description
 -----------
 That utility help to download in a one-way fashion remote files/folders to a target directory.<br/>
-The main advantages over bare `rsync` is that every files/folders downloaded once won't be retrieved again if they are moved out of target directory.
+The main advantages over bare `rsync` is that every files/folders will only be downloaded once even if they are move out of target directory.<br/>
 
 If any signal is received (KILL, SIGINT), it will stop downloading. Partially downloaded files or folder will be resumed on next start.
 
@@ -22,7 +22,7 @@ Can optionally throttle temporaly deluge to ensure faster file retrieval.
 Automation
 ----------
 - Set-up cron properly to run and kill the program at the wanted hours.
-- Samples are included along side to demonstre how to make things work.
+- Samples are included along side to demonstrate usage.
 
 Install
 -------
@@ -33,13 +33,5 @@ python3 setup.py install # (or develop)
 FreeBSD users
 =============
 
-Python3
--------
-The support of sqlite3 isn't bundled within `python3` you will have to install `py-sqlite3` to make it
-works.
-
-Locale
-------
-Ensure local are properly configured on client and server side, else you will get into trouble.
-You can customize your `/etc/login.conf` or `~/.login.conf`.
-see : https://www.freebsd.org/doc/handbook/using-localization.html
+- The support of `sqlite3` isn't bundled within `python3` you will also need to install `py-sqlite3`.
+- Ensure local are properly configured on client and server side. Hint : Customize your `/etc/login.conf` or `~/.login.conf`.<br/>See: https://www.freebsd.org/doc/handbook/using-localization.html
