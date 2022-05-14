@@ -6,12 +6,11 @@ from deluge_client import DelugeRPCClient
 from one_time_sync.util.app import Config
 
 
-# FIXME Encoding problem happening when trying to call '_escape_quote' ('_source_dir' and '_target_dir')
 class RemoteFileSystem:
-    """Operate on file from remote files."""
+    """Operate on remote file system through SSH."""
     def __init__(self, config: Config):
-        """Run commands on remote host over SSH
-        :type config: `~app.Configuration`
+        """Operate on remote file system through SSH.
+        :type config: Application configuration.
         """
         self._source_username = config.src_username
         self._source_hostname = config.src_host
@@ -70,13 +69,12 @@ class RemoteFileSystem:
         cmd.append("--delay-updates")
         cmd.append("--recursive")
 
-        # TODO Escape properly specials chars like double quote (doesn't seems to work with source_dir and target_dir)
-        # source directory ARG
-        cmd.append("{user}@{host}:'{directory}/{filename}'".format(
+        # source file/directory ARG
+        cmd.append("{user}@{host}:{directory}/{filename}".format(
                 user=self._source_username,
                 host=self._source_hostname,
                 directory=self._source_dir,
-                filename=self._escape_quote(filename)
+                filename=filename
         ))
 
         # destination directory ARG
@@ -95,14 +93,6 @@ class RemoteFileSystem:
         else:
             self._process = None
             return False
-
-    @staticmethod
-    def _escape_quote(name):
-        """Escape single quote char to avoid broken directory and filename path
-        :param name:
-        :return:
-        """
-        return name.replace("'", "'\\''")
 
 
 class Deluge:

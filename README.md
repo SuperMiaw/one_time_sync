@@ -6,7 +6,7 @@ Requirement
 1. `python3` for making this program works.
 2. `open-ssh` set up on client and on remote server to set-up secure channels.
 3. `keychain` set up in background (or any other ssh-agent ?) to manage identification and authentication by rsa keys.
-4. `rsync` on client and on server to handle transfert file between server and client.
+4. `rsync` (>= 3.2.4) on client and on server to handle transfert file between server and client.
 5. `sqlite3` to store sync status of files.
 6. `vixie-cron` working to automate tasks.
 
